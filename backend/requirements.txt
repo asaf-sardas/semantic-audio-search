@@ -1,0 +1,10 @@
+# API
+fastapi
+uvicorn
+
+# PostgreSQL
+sqlalchemy>=2.0
+psycopg2-binary
+
+# Environment
+python-dotenv
