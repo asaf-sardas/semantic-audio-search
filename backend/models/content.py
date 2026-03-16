@@ -26,6 +26,7 @@ class Content(Base):
     id: Mapped[str] = mapped_column(String(255), primary_key=True)  
     title: Mapped[str] = mapped_column(String(512), nullable=False)
     url: Mapped[str] = mapped_column(String(2048), nullable=False)
+    thumbnail_url: Mapped[str] = mapped_column(String(2048), nullable=True)
     source_type: Mapped[SourceType] = mapped_column(SQLEnum(SourceType), 
     nullable=False)
     status: Mapped[ContentStatus] = mapped_column(SQLEnum(ContentStatus),
