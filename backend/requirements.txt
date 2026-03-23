@@ -1,10 +1,20 @@
 # API
 fastapi
-uvicorn
+uvicorn[standard]
+
 
 # PostgreSQL
 sqlalchemy>=2.0
 psycopg2-binary
-
+pydantic>=2.12.5
 # Environment
 python-dotenv
+
+# Security (password hashing)
+bcrypt
+
+# Used by pydantic.EmailStr
+email-validator
+
+#YouTube API
+yt_dlp

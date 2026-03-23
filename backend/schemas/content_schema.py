@@ -8,14 +8,20 @@ from models.content import ContentStatus,SourceType
 
 
 class ContentBase(BaseModel):
-    title: str = Field(..., min_length=1, max_length=512)
     url: str = Field(..., min_length=1, max_length=2048)
     thumbnail_url: str | None = Field(default=None, max_length=2048)
+    title: str = Field(..., min_length=1, max_length=512)
+    duration: int | None =Field(default=None,ge=0)
     source_type: SourceType
 
 
-class ContentCreate(ContentBase):
-    id: str = Field(..., min_length=1, max_length=255)
+class ContentCreate(BaseModel):
+    url: str = Field(..., min_length=1, max_length=2048)
+    source_type: SourceType
+
+class ContentPreviewResponse(ContentBase):
+    pass
+
 
 
 class ContentUpdate(BaseModel):
@@ -24,12 +30,13 @@ class ContentUpdate(BaseModel):
     thumbnail_url: str | None = Field(default=None, max_length=2048)
     source_type: SourceType | None = None
     status: ContentStatus | None = None
+    duration: int | None = Field(default=None, ge=0)
 
 
 class ContentRead(ContentBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: str
+    id: str = Field(..., min_length=1, max_length=255)
     status: ContentStatus
     created_at: datetime
     last_searched_at: datetime | None = None
