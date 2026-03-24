@@ -4,9 +4,9 @@ import bcrypt
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from models.user import User
-from models.search_history import SearchHistory
-from schemas.user_schema import UserCreate, UserLogin, UserRead, UserUpdate
+from backend.models.user import User
+from backend.models.search_history import SearchHistory
+from backend.schemas.user_schema import UserCreate, UserLogin, UserRead, UserUpdate
 
 
 def _hash_password(password: str) -> str:

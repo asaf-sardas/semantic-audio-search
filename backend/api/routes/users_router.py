@@ -3,10 +3,10 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from database import get_db
-from schemas.user_schema import UserRead, UserUpdate
-from schemas.search_schema import SearchHistoryRead
-from services.user_service import (
+from backend.database import get_db
+from backend.schemas.user_schema import UserRead, UserUpdate
+from backend.schemas.search_schema import SearchHistoryRead
+from backend.services.user_service import (
     update_user_profile,
     get_user_history,
     delete_history_item,

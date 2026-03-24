@@ -4,8 +4,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from models.content import Content, ContentStatus, SourceType
-from schemas.content_schema import ContentCreate
+from backend.models.content import Content, ContentStatus, SourceType
+from backend.schemas.content_schema import ContentCreate
 
 
 def _fetch_youtube_metadata(url: str) -> dict:
