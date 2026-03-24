@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy.orm import Session
-from schemas.search_schema import SearchRequest, SearchResponse, TimestampResult
-from models.search_history import SearchHistory
+from backend.schemas.search_schema import SearchRequest, SearchResponse, TimestampResult
+from backend.models.search_history import SearchHistory
 
 def perform_search(db: Session, request: SearchRequest, user_id: uuid.UUID | None = None) -> SearchResponse:
 

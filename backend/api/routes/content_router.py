@@ -3,9 +3,9 @@ from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
 
-from database import get_db
-from schemas.content_schema import ContentCreate,ContentRead,ContentStatusRead, ContentPreviewResponse
-from services.content_service import get_content_by_id,process_content,preview_content
+from backend.database import get_db
+from backend.schemas.content_schema import ContentCreate,ContentRead,ContentStatusRead, ContentPreviewResponse
+from backend.services.content_service import get_content_by_id,process_content,preview_content
 
 router = APIRouter(prefix="/api/v1/content", tags=["Content"])
 

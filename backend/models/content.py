@@ -5,7 +5,7 @@ from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from models.base import Base
+from backend.models.base import Base
 
 
 class SourceType(str, Enum):
