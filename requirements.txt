@@ -1,20 +1,23 @@
 # API
-fastapi
-uvicorn[standard]
+fastapi==0.135.2
+uvicorn[standard]==0.42.0
 
 
 # PostgreSQL
-sqlalchemy>=2.0
-psycopg2-binary
-pydantic>=2.12.5
+sqlalchemy==2.0.48
+psycopg2-binary==2.9.11
+pydantic==2.12.5
 # Environment
-python-dotenv
+python-dotenv==1.2.2
 
 # Security (password hashing)
-bcrypt
+bcrypt==5.0.0
 
 # Used by pydantic.EmailStr
-email-validator
+email-validator==2.3.0
 
 #YouTube API
-yt_dlp
+yt_dlp==2026.3.17
+
+openai-whisper==20250625
+ffmpeg
