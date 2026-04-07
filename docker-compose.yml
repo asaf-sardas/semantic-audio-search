@@ -9,19 +9,21 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672/
     depends_on:
-      - rabbitmq
-    volumes:
-      - ./backend:/app 
- 
-  processor:
+      rabbitmq:
+        condition: service_healthy
+
+  transcription_worker:
     build:
-      context: ./processor
+      context: ./transcription_worker
       dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672/
     depends_on:
-      - rabbitmq
-    volumes:
-      - ./processor:/app 
+      rabbitmq:
+        condition: service_healthy
+
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -29,10 +31,15 @@ services:
       - "15672:15672"
       - "5672:5672"
     environment:
-      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   rabbitmq_data:
