@@ -1,13 +1,14 @@
-FROM python:3.13
+FROM python:3.12-slim
 WORKDIR /usr/local/app
 
-COPY . ./backend
-RUN pwd && ls
-RUN pip install --no-cache-dir -r backend/requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN useradd -m app && chown -R app:app /usr/local/app
+USER app
 
 EXPOSE 8000
 
-RUN useradd app
-USER app
-
-CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

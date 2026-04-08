@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from backend.schemas.search_schema import SearchRequest, SearchResponse
-from backend.database import get_db
+from schemas.search_schema import SearchRequest, SearchResponse
+from database import get_db
 
-from backend.services import search_service
+from services import search_service
 
 router = APIRouter(prefix="/api/v1/search", tags=["Search"])
 

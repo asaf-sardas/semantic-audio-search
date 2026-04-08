@@ -5,7 +5,7 @@ from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from backend.models.base import Base
+from models.base import Base
 
 
 class SourceType(str, Enum):
@@ -16,7 +16,9 @@ class SourceType(str, Enum):
 
 class ContentStatus(str, Enum):
     PENDING = "pending"
-    PROCESSING = "processing"
+    EXTRACTING_MEDIA = "extracting_media"
+    TRANSCRIBING = "transcribing"
+    GENERATING_VECTORS = "generating_vectors"
     READY = "ready"
     FAILED = "failed"
 
