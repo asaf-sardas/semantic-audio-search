@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
+from backend.models.base import Base
+
 base_dir = os.path.dirname(os.path.dirname(__file__))
 load_dotenv(os.path.join(base_dir, ".env"))
 
@@ -22,6 +24,4 @@ def get_db():
 
 
 def create_tables():
-    from models.base import Base
-    import models   
     Base.metadata.create_all(bind=engine)
