@@ -1,8 +1,11 @@
 import os
 import whisper
 import pika
+from pika.adapters.blocking_connection import BlockingChannel
+from pika.spec import Basic, BasicProperties
 import json
 import tempfile
+import requests
 from dotenv import load_dotenv
 from extractors.audio_extractor_factory import AudioExtractorFactory
 
@@ -10,26 +13,51 @@ from extractors.audio_extractor_factory import AudioExtractorFactory
 model = whisper.load_model("base")
 
 
-def callback(ch, method, properties, body):
+def update_status_in_db(video_id: str, new_status: str):
+    backend_url = os.environ.get("BACKEND_URL")
+    if not backend_url:
+        raise ValueError("BACKEND_URL environment variable is missing")
+
+    endpoint = f"{backend_url}/api/v1/content/{video_id}/status"
+    payload = {"status": new_status}
+    headers = {"X-Internal-API-Key": os.environ.get("INTERNAL_API_KEY")}
+    response = requests.patch(endpoint, json=payload,headers=headers, timeout=10)
+
+    response.raise_for_status()
+    print(f"[*] Status updated to '{new_status}' for video {video_id}")
+
+def callback(ch:BlockingChannel, method:Basic.Deliver, properties:BasicProperties, body:bytes):
     print(f"[*] Received message for transcription...")
     try:
         message = json.loads(body.decode('utf-8'))
         with tempfile.TemporaryDirectory() as tmpdir:
             extractor = AudioExtractorFactory.get_extractor(message["source_type"])
-            # TODO change status to extracting media in DB
+            update_status_in_db(video_id=message["id"],new_status="extracting_media")
             path = extractor.download_and_extract(message["url"], tmpdir)
-            # TODO change status to transcribing in DB
+
+            update_status_in_db(video_id=message["id"],new_status="transcribing")
             result = whisper.transcribe(model=model,audio=path)
-            segments_data = []
+            segments = []
             for segment in result["segments"]:
-                print(segment)
-                segments_data.append({
+                segments.append({
                     "start": segment["start"],
                     "end": segment["end"],
                     "text": segment["text"].strip()
                 })
-            # TODO publish to embedding_q
-
+            output={
+                "source_type":message["source_type"],
+                "id":message["id"],
+                "message":segments
+            }
+            print(output)
+            ch.basic_publish(exchange='semantic_search_exchange',
+                             routing_key='video.embedding',
+                             body=(json.dumps(output)).encode("utf-8"),
+                             properties=pika.BasicProperties(
+                                 content_type='application/json',
+                                 delivery_mode=pika.DeliveryMode.Persistent
+                                )
+                             )
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -68,6 +96,13 @@ def main():
         on_message_callback=callback,
         auto_ack=False
     )
+
+    next_queue_name="embedding_queue"
+    channel.queue_declare(queue=next_queue_name,durable=True)
+    next_routing_key="video.embedding"
+    channel.queue_bind(queue=next_queue_name,
+                       exchange=exchange_name,
+                       routing_key=next_routing_key)
 
     print(f"[*] Waiting for messages in queue '{queue_name}'... To exit press CTRL+C")
     channel.start_consuming()
