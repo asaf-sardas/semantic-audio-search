@@ -10,3 +10,7 @@ openai==2.31.0
 
 #API
 requests==2.33.1
+
+#VectorDB
+psycopg2-binary==2.9.11
+pgvector

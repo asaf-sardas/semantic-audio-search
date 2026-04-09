@@ -7,6 +7,14 @@ class OpenAIProvider(EmbeddingProvider):
         self.client=OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = "text-embedding-3-small"
 
+    @property
+    def dimension(self) -> int:
+        return 1536
+
+    @property
+    def collection_name(self) -> str:
+        return "openai"
+
     def generate_embeddings(self,chunks:list) ->list:
         if not chunks:
             return []
