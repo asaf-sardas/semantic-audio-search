@@ -1,4 +1,4 @@
-from embedding_base import EmbeddingProvider
+from embeddings.embedding_base import EmbeddingProvider
 import os
 from openai import OpenAI
 
