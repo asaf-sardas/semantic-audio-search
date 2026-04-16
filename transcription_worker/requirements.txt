@@ -11,4 +11,4 @@ python-dotenv==1.2.2
 yt_dlp==2026.3.17
 
 #API
-requests
+requests==2.33.1
